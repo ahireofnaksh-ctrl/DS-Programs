@@ -1,0 +1,131 @@
+Program 3: Menu-driven program for a Singly Linked List (SLL) with the following 
+operations: 
+Code   
+#include <stdio.h> 
+#include <stdlib.h> 
+// Define a node structure 
+struct Node { 
+int data; 
+struct Node* next; 
+}; 
+struct Node* head = NULL;   // Initially list is empty 
+// Function to insert a node at the beginning 
+void insertAtBeginning(int value) { 
+struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));  
+newNode->data = value; 
+newNode->next = head; 
+head = newNode; 
+printf("Node %d added at the start.\n", value); 
+} 
+// Function to delete a node from the beginning 
+void deleteFromBeginning() { 
+if (head == NULL) { 
+printf("Cannot delete! Linked List is empty.\n"); 
+} else { 
+struct Node* temp = head; 
+printf("Removed node with value: %d\n", temp->data); 
+head = head->next; 
+free(temp); 
+} 
+} 
+// Function to display the list 
+void display() { 
+if (head == NULL) { 
+printf("No elements to display! List empty.\n"); 
+return; 
+} 
+ 
+    printf("Current Linked List: "); 
+    struct Node* temp = head; 
+    while (temp != NULL) { 
+        printf("[%d] -> ", temp->data); 
+        temp = temp->next; 
+    } 
+    printf("NULL\n"); 
+} 
+ 
+// Main program with menu 
+int main() { 
+    int choice, value; 
+    while (1) { 
+        printf("\n===== LINKED LIST OPERATIONS =====\n"); 
+        printf("1. Add Node at Start\n"); 
+        printf("2. Remove Node from Start\n"); 
+        printf("3. Show List\n"); 
+        printf("4. Quit Program\n"); 
+        printf("Choose an option: "); 
+        scanf("%d", &choice); 
+ 
+        switch (choice) { 
+            case 1: 
+                printf("Enter value: "); 
+                scanf("%d", &value); 
+                insertAtBeginning(value); 
+                break; 
+            case 2: 
+                deleteFromBeginning(); 
+                break; 
+            case 3: 
+                display(); 
+                break; 
+            case 4: 
+                printf("Program Ended. Thank you!\n"); 
+                exit(0); 
+            default: 
+                printf("Invalid option! Please try again.\n"); 
+        } 
+    } 
+    return 0; 
+}   
+   
+   
+ 
+ 
+ 
+ 
+ 
+Output: 
+===== LINKED LIST OPERATIONS ===== 
+1. Add Node at Start 
+2. Remove Node from Start 
+3. Show List 
+4. Quit Program 
+Choose an option: 1 
+Enter value: 10 
+Node 10 added at the start. 
+===== LINKED LIST OPERATIONS ===== 
+1. Add Node at Start 
+2. Remove Node from Start 
+3. Show List 
+4. Quit Program 
+Choose an option: 1 
+Enter value: 20 
+Node 20 added at the start. 
+===== LINKED LIST OPERATIONS ===== 
+1. Add Node at Start 
+2. Remove Node from Start 
+3. Show List 
+4. Quit Program 
+Choose an option: 3 
+Current Linked List: [20] -> [10] -> NULL 
+===== LINKED LIST OPERATIONS ===== 
+1. Add Node at Start 
+2. Remove Node from Start 
+3. Show List 
+4. Quit Program 
+Choose an option: 2 
+Removed node with value: 20 
+===== LINKED LIST OPERATIONS ===== 
+1. Add Node at Start 
+2. Remove Node from Start 
+3. Show List 
+4. Quit Program 
+Choose an option: 3 
+Current Linked List: [10] -> NULL 
+===== LINKED LIST OPERATIONS ===== 
+1. Add Node at Start 
+2. Remove Node from Start 
+3. Show List 
+4. Quit Program 
+Choose an option: 4 
+Program Ended. Thank you! 

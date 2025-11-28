@@ -1,0 +1,218 @@
+Program 5: Implementation of Circular Linked List by menu-driven C program with the basic operations
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+/* Helper to create a node */
+struct Node* createNode(int val) {
+    struct Node* n = (struct Node*)malloc(sizeof(struct Node));
+    if (!n) { printf("Memory allocation failed\n"); exit(1); }
+    n->data = val;
+    n->next = NULL;
+    return n;
+}
+
+/* Insert at beginning */
+void insertAtBeginning(int value) {
+    struct Node* newNode = createNode(value);
+    if (head == NULL) {
+        head = newNode;
+        head->next = head;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != head) temp = temp->next;
+        newNode->next = head;
+        temp->next = newNode;
+        head = newNode;
+    }
+    printf("[OK] Inserted %d at beginning.\n\n", value);
+}
+
+/* Insert at end */
+void insertAtEnd(int value) {
+    struct Node* newNode = createNode(value);
+    if (head == NULL) {
+        head = newNode;
+        head->next = head;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != head) temp = temp->next;
+        temp->next = newNode;
+        newNode->next = head;
+    }
+    printf("[OK] Inserted %d at end.\n\n", value);
+}
+
+/* Delete from beginning */
+void deleteFromBeginning() {
+    if (head == NULL) {
+        printf("List is empty.\n\n");
+        return;
+    }
+    struct Node* temp = head;
+    struct Node* last = head;
+    while (last->next != head) last = last->next;
+
+    if (head == head->next) {
+        printf("[REMOVED] %d from beginning.\n\n", head->data);
+        free(head);
+        head = NULL;
+    } else {
+        printf("[REMOVED] %d from beginning.\n\n", head->data);
+        head = head->next;
+        last->next = head;
+        free(temp);
+    }
+}
+
+/* Delete from end */
+void deleteFromEnd() {
+    if (head == NULL) {
+        printf("List is empty.\n\n");
+        return;
+    }
+    struct Node* temp = head;
+    struct Node* prev = NULL;
+    while (temp->next != head) { prev = temp; temp = temp->next; }
+
+    if (temp == head) {
+        printf("[REMOVED] %d from end.\n\n", temp->data);
+        free(temp);
+        head = NULL;
+    } else {
+        printf("[REMOVED] %d from end.\n\n", temp->data);
+        prev->next = head;
+        free(temp);
+    }
+}
+
+/* Display list */
+void display() {
+    if (head == NULL) {
+        printf("List => (empty)\n\n");
+        return;
+    }
+    struct Node* temp = head;
+    printf("List => ");
+    do {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    } while (temp != head);
+    printf("(head)\n\n");
+}
+
+/* Print menu header exactly as requested */
+void printMenuHeader() {
+    printf("=== Circular Linked List ===\n");
+    printf("1. Insert at Beginning\n");
+    printf("2. Insert at End\n");
+    printf("3. Delete from Beginning\n");
+    printf("4. Delete from End\n");
+    printf("5. Display\n");
+    printf("6. Exit\n");
+    printf("Choose option: ");
+}
+
+int main() {
+    int choice, value;
+    while (1) {
+        printMenuHeader();
+        if (scanf("%d", &choice) != 1) {
+            // invalid input: clear and exit gracefully
+            printf("Invalid input. Exiting program...\n");
+            return 0;
+        }
+
+        switch (choice) {
+            case 1:
+                printf("Value: ");
+                if (scanf("%d", &value) != 1) { printf("Invalid value.\n\n"); break; }
+                insertAtBeginning(value);
+                break;
+            case 2:
+                printf("Value: ");
+                if (scanf("%d", &value) != 1) { printf("Invalid value.\n\n"); break; }
+                insertAtEnd(value);
+                break;
+            case 3:
+                deleteFromBeginning();
+                break;
+            case 4:
+                deleteFromEnd();
+                break;
+            case 5:
+                display();
+                break;
+            case 6:
+                printf("Exiting program...\n");
+                return 0;
+            default:
+                printf("Invalid option. Try again.\n\n");
+        }
+    }
+    return 0;
+}
+
+
+Output:
+
+=== Circular Linked List ===
+1. Insert at Beginning
+2. Insert at End
+3. Delete from Beginning
+4. Delete from End
+5. Display
+6. Exit
+Choose option: 1
+Value: 10
+[OK] Inserted 10 at beginning.
+
+=== Circular Linked List ===
+Choose option: 2
+Value: 20
+[OK] Inserted 20 at end.
+
+=== Circular Linked List ===
+Choose option: 2
+Value: 30
+[OK] Inserted 30 at end.
+
+=== Circular Linked List ===
+Choose option: 5
+List => 10 -> 20 -> 30 -> (head)
+
+=== Circular Linked List ===
+Choose option: 1
+Value: 5
+[OK] Inserted 5 at beginning.
+
+=== Circular Linked List ===
+Choose option: 5
+List => 5 -> 10 -> 20 -> 30 -> (head)
+
+=== Circular Linked List ===
+Choose option: 3
+[REMOVED] 5 from beginning.
+
+=== Circular Linked List ===
+Choose option: 5
+List => 10 -> 20 -> 30 -> (head)
+
+=== Circular Linked List ===
+Choose option: 4
+[REMOVED] 30 from end.
+
+=== Circular Linked List ===
+Choose option: 5
+List => 10 -> 20 -> (head)
+
+=== Circular Linked List ===
+Choose option: 6
+Exiting program...

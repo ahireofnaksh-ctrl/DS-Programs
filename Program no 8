@@ -1,0 +1,55 @@
+Program no 8
+#include <stdio.h>
+
+int main() {
+    int arr[50], n, i, j, key;
+
+    printf("=== Insertion Sort Implementation ===\n");
+
+    printf("How many numbers do you want to sort? ");
+    scanf("%d", &n);
+
+    printf("\nEnter the %d numbers:\n", n);
+    for (i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+
+    printf("\n>>> Insertion Sort in Progress...\n");
+
+    // Insertion Sort Algorithm
+    for (i = 1; i < n; i++) {
+        key = arr[i];
+        j = i - 1;
+
+        // Move elements greater than key
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = key;
+    }
+
+    printf("\n>>> Sorted List:\n");
+    printf("Numbers in Ascending Order: ");
+    for (i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+
+    printf("\n\nSorting Completed Successfully.\n");
+
+    return 0;
+}
+
+
+Output
+
+=== Insertion Sort Implementation ===
+How many numbers do you want to sort? 5
+
+Enter the 5 numbers:
+34 12 5 78 20
+
+>>> Insertion Sort in Progress...
+
+>>> Sorted List:
+Numbers in Ascending Order: 5 12 20 34 78 
+
+Sorting Completed Successfully.

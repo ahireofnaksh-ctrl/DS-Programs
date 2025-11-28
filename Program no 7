@@ -1,0 +1,64 @@
+Program 7: Write programs for the implementation of graph traversals by applying DFS.
+
+#include <stdio.h>
+#define MAX 10
+
+int adj[MAX][MAX];
+int visited[MAX];
+int n;  // number of vertices
+
+void DFS(int v) {
+    printf("%d ", v);
+    visited[v] = 1;
+
+    for (int i = 0; i < n; i++) {
+        if (adj[v][i] == 1 && visited[i] == 0) {
+            DFS(i);
+        }
+    }
+}
+
+int main() {
+    int start;
+
+    printf("=== DFS on Graph (Adjacency Matrix) ===\n");
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("\nEnter adjacency matrix (%d x %d):\n", n, n);
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            scanf("%d", &adj[i][j]);
+
+    printf("\nEnter starting vertex (0 to %d): ", n - 1);
+    scanf("%d", &start);
+
+    for (int i = 0; i < n; i++) visited[i] = 0;
+
+    printf("\n>>> DFS Traversal Output\n");
+    printf("Visited Order => ");
+    DFS(start);
+
+    printf("\n\nProcess completed.\n");
+
+    return 0;
+}
+
+
+Output:
+
+=== DFS on Graph (Adjacency Matrix) ===
+Enter number of vertices: 4
+
+Enter adjacency matrix (4 x 4):
+1 1 0 0
+1 1 1 0
+0 1 1 1
+0 0 1 1
+
+Enter starting vertex (0 to 3): 0
+
+>>> DFS Traversal Output
+Visited Order => 0 1 2 3 
+
+Process completed.

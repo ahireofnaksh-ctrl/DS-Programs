@@ -1,0 +1,164 @@
+Program 1: Program to implement a stack using arrays
+
+#include <stdio.h>
+#define MAX 5   // Maximum size of the stack
+
+int stack[MAX];   // Array for stack elements
+int top = -1;     // Top of stack (initially empty)
+
+// Function to push an element into stack
+void push(int value) {
+    if (top == MAX - 1) {   // Check for overflow
+        printf("Stack Overflow! Cannot push %d\n", value);
+    } else {
+        top++;
+        stack[top] = value;
+        printf("%d pushed into stack.\n", value);
+    }
+}
+
+// Function to pop an element from stack
+void pop() {
+    if (top == -1) {   // Check for underflow
+        printf("Stack Underflow! No element to pop.\n");
+    } else {
+        printf("%d popped from stack.\n", stack[top]);
+        top--;
+    }
+}
+
+// Function to display the stack
+void display() {
+    if (top == -1) {
+        printf("Stack is empty.\n");
+    } else {
+        printf("Stack elements are: ");
+        for (int i = top; i >= 0; i--) {
+            printf("%d ", stack[i]);
+        }
+        printf("\n");
+    }
+}
+
+// Main program (menu-driven)
+int main() {
+    int choice, value;
+    while (1) {
+        printf("\n--- Stack Menu ---\n");
+        printf("1. Push\n2. Pop\n3. Display\n4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to push: ");
+                scanf("%d", &value);
+                push(value);
+                break;
+            case 2:
+                pop();
+                break;
+            case 3:
+                display();
+                break;
+            case 4:
+                return 0;   // Exit program
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+}
+
+Output:
+
+--- Stack Menu ---
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 1
+Enter value to push: 10
+10 pushed into stack.
+
+--- Stack Menu ---
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 1
+Enter value to push: 20
+20 pushed into stack.
+
+--- Stack Menu ---
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 1
+Enter value to push: 30
+30 pushed into stack.
+
+--- Stack Menu ---
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 1
+Enter value to push: 40
+40 pushed into stack.
+
+--- Stack Menu ---
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 2
+40 popped from stack.
+
+--- Stack Menu ---
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 2 
+30 popped from stack.
+
+--- Stack Menu ---
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 2
+20 popped from stack.
+
+--- Stack Menu ---
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 2
+10 popped from stack.
+
+--- Stack Menu ---
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 2
+Stack Underflow! No element to pop.
+
+--- Stack Menu ---
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 3
+Stack is empty.
+
+--- Stack Menu ---
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 4
+[1] + Done             

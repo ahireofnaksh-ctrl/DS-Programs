@@ -1,0 +1,191 @@
+Program 2 
+
+#include <stdio.h>
+#define MAX 5   // Maximum size of the circular queue
+
+int queue[MAX];     // Array to store queue elements
+int front = -1;     // Points to the front element
+int rear = -1;      // Points to the last element
+
+// Function to insert an element in the circular queue
+void enqueue(int value) {
+    // Overflow condition: queue is full
+    if ((front == 0 && rear == MAX - 1) || (front == rear + 1)) {
+        printf("Queue Overflow! Cannot insert %d\n", value);
+        return;
+    }
+
+    // If inserting the very first element
+    if (front == -1) {
+        front = 0;
+        rear = 0;
+    } 
+    // If rear is at the end, wrap it to the beginning
+    else if (rear == MAX - 1) {
+        rear = 0;
+    } 
+    // Otherwise, just move rear one step forward
+    else {
+        rear++;
+    }
+
+    // Insert element at new rear position
+    queue[rear] = value;
+    printf("%d enqueued into queue.\n", value);
+}
+
+// Function to delete an element from the circular queue
+void dequeue() {
+    // Underflow condition: queue is empty
+    if (front == -1) {
+        printf("Queue Underflow! No element to dequeue.\n");
+        return;
+    }
+
+    // Print the element being removed
+    printf("%d dequeued from queue.\n", queue[front]);
+
+    // If the queue has only one element left
+    if (front == rear) {
+        front = -1;
+        rear = -1;
+    }
+    // If front is at the end, wrap around to 0
+    else if (front == MAX - 1) {
+        front = 0;
+    } 
+    // Otherwise, just move front one step forward
+    else {
+        front++;
+    }
+}
+
+// Function to display elements of the circular queue
+void display() {
+    // If queue is empty
+    if (front == -1) {
+        printf("Queue is empty.\n");
+        return;
+    }
+
+    printf("Queue elements are: ");
+
+    // Case 1: front <= rear (no wrap-around)
+    if (front <= rear) {
+        for (int i = front; i <= rear; i++) {
+            printf("%d ", queue[i]);
+        }
+    } 
+    // Case 2: front > rear (wrap-around occurred)
+    else {
+        // Print from front to end of array
+        for (int i = front; i < MAX; i++) {
+            printf("%d ", queue[i]);
+        }
+        // Print from beginning of array to rear
+        for (int i = 0; i <= rear; i++) {
+            printf("%d ", queue[i]);
+        }
+    }
+    printf("\n");
+}
+
+// Main program with menu-driven options
+int main() {
+    int choice, value;
+
+    while (1) {
+        printf("\n--- Circular Queue Menu ---\n");
+        printf("1. Enqueue\n2. Dequeue\n3. Display\n4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: // Enqueue
+                printf("Enter value to enqueue: ");
+                scanf("%d", &value);
+                enqueue(value);
+                break;
+            case 2: // Dequeue
+                dequeue();
+                break;
+            case 3: // Display
+                display();
+                break;
+            case 4: // Exit
+                return 0;
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+}
+
+Output Of this Program :
+
+
+--- Circular Queue Menu ---
+1. Enqueue
+2. Dequeue
+3. Display
+4. Exit
+Enter your choice: 1
+Enter value to enqueue: 10
+10 enqueued into queue.
+
+--- Circular Queue Menu ---
+1. Enqueue
+2. Dequeue
+3. Display
+4. Exit
+Enter your choice: 1
+Enter value to enqueue: 20
+20 enqueued into queue.
+
+--- Circular Queue Menu ---
+1. Enqueue
+2. Dequeue
+3. Display
+4. Exit
+Enter your choice: 1
+Enter value to enqueue: 30
+30 enqueued into queue.
+
+--- Circular Queue Menu ---
+1. Enqueue
+2. Dequeue
+3. Display
+4. Exit
+Enter your choice: 3
+Queue elements are: 10 20 30 
+
+--- Circular Queue Menu ---
+1. Enqueue
+2. Dequeue
+3. Display
+4. Exit
+Enter your choice: 2
+10 dequeued from queue.
+
+--- Circular Queue Menu ---
+1. Enqueue
+2. Dequeue
+3. Display
+4. Exit
+Enter your choice: 10
+Invalid choice! Please try again.
+
+--- Circular Queue Menu ---
+1. Enqueue
+2. Dequeue
+3. Display
+4. Exit
+Enter your choice: 2
+20 dequeued from queue.
+
+--- Circular Queue Menu ---
+1. Enqueue
+2. Dequeue
+3. Display
+4. Exit
+Enter your choice: 2
+30 dequeued from queue.

@@ -1,0 +1,395 @@
+Program 4: Menu driven program for implementation of Binary tree by using following methods: Insert, Delete, Search, and Display.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define structure of a tree node
+typedef struct Node {
+    int key;
+    struct Node *left;
+    struct Node *right;
+} Node;
+
+Node* root = NULL;   // Initially tree is empty
+
+/* Utility: create new node */
+Node* newNode(int key) {
+    Node* n = (Node*)malloc(sizeof(Node));
+    if (!n) {
+        printf("Memory allocation failed\n");
+        exit(1);
+    }
+    n->key = key;
+    n->left = n->right = NULL;
+    return n;
+}
+
+/* Find min value node */
+Node* minValueNode(Node* node) {
+    Node* cur = node;
+    while (cur && cur->left)
+        cur = cur->left;
+    return cur;
+}
+
+/* Insert (recursive, BST property) */
+Node* insert(Node* node, int key) {
+    if (node == NULL) return newNode(key);
+    if (key < node->key)
+        node->left = insert(node->left, key);
+    else if (key > node->key)
+        node->right = insert(node->right, key);
+    else
+        printf("Key %d already exists. Skipping insert.\n", key);
+    return node;
+}
+
+/* Search */
+int search(Node* node, int key) {
+    if (node == NULL) return 0;
+    if (key == node->key) return 1;
+    if (key < node->key) return search(node->left, key);
+    else return search(node->right, key);
+}
+
+/* Delete */
+Node* deleteKey(Node* node, int key) {
+    if (node == NULL) return node;
+    if (key < node->key)
+        node->left = deleteKey(node->left, key);
+    else if (key > node->key)
+        node->right = deleteKey(node->right, key);
+    else {
+        // found
+        if (node->left == NULL) {
+            Node* temp = node->right;
+            printf("Deleted %d\n", node->key);
+            free(node);
+            return temp;
+        } else if (node->right == NULL) {
+            Node* temp = node->left;
+            printf("Deleted %d\n", node->key);
+            free(node);
+            return temp;
+        }
+        Node* succ = minValueNode(node->right);
+        node->key = succ->key;
+        node->right = deleteKey(node->right, succ->key);
+    }
+    return node;
+}
+
+/* Traversals */
+void inorder(Node* node) {
+    if (!node) return;
+    inorder(node->left);
+    printf("%d ", node->key);
+    inorder(node->right);
+}
+
+void preorder(Node* node) {
+    if (!node) return;
+    printf("%d ", node->key);
+    preorder(node->left);
+    preorder(node->right);
+}
+
+void postorder(Node* node) {
+    if (!node) return;
+    postorder(node->left);
+    postorder(node->right);
+    printf("%d ", node->key);
+}
+
+/* Height of tree */
+int height(Node* node) {
+    if (!node) return 0;
+    int lh = height(node->left);
+    int rh = height(node->right);
+    return (lh > rh ? lh : rh) + 1;
+}
+
+/* Level-order (BFS) using simple queue of Node* */
+typedef struct QNode {
+    Node* treeNode;
+    struct QNode* next;
+} QNode;
+
+typedef struct {
+    QNode *front, *rear;
+} Queue;
+
+Queue* createQueue() {
+    Queue* q = (Queue*)malloc(sizeof(Queue));
+    q->front = q->rear = NULL;
+    return q;
+}
+
+void enqueue(Queue* q, Node* tnode) {
+    QNode* qn = (QNode*)malloc(sizeof(QNode));
+    qn->treeNode = tnode;
+    qn->next = NULL;
+    if (q->rear == NULL) {
+        q->front = q->rear = qn;
+        return;
+    }
+    q->rear->next = qn;
+    q->rear = qn;
+}
+
+Node* dequeue(Queue* q) {
+    if (q->front == NULL) return NULL;
+    QNode* temp = q->front;
+    Node* tn = temp->treeNode;
+    q->front = q->front->next;
+    if (q->front == NULL) q->rear = NULL;
+    free(temp);
+    return tn;
+}
+
+int isEmptyQ(Queue* q) {
+    return q->front == NULL;
+}
+
+void levelOrder(Node* root) {
+    if (!root) {
+        printf("Tree is empty.\n");
+        return;
+    }
+    Queue* q = createQueue();
+    enqueue(q, root);
+    while (!isEmptyQ(q)) {
+        Node* cur = dequeue(q);
+        printf("%d ", cur->key);
+        if (cur->left) enqueue(q, cur->left);
+        if (cur->right) enqueue(q, cur->right);
+    }
+    printf("\n");
+    free(q);
+}
+
+/* Menu helpers */
+void displayMenu() {
+    printf("\n--- Binary Search Tree Menu ---\n");
+    printf("1. Insert\n");
+    printf("2. Delete\n");
+    printf("3. Search\n");
+    printf("4. Display (Traversals)\n");
+    printf("5. Height\n");
+    printf("6. Exit\n");
+    printf("Enter your choice: ");
+}
+
+void displayTraversalMenu() {
+    int ch;
+    if (!root) {
+        printf("Tree is empty.\n");
+        return;
+    }
+    printf("\n-- Display Options --\n");
+    printf("1. Inorder   (L, Root, R → Sorted)\n");
+    printf("2. Preorder  (Root, L, R)\n");
+    printf("3. Postorder (L, R, Root)\n");
+    printf("4. Level-order (BFS)\n");
+    printf("Enter your choice: ");
+    if (scanf("%d", &ch) != 1) { printf("Invalid input.\n"); return; }
+    printf("Traversal: ");
+    switch (ch) {
+        case 1: inorder(root); break;
+        case 2: preorder(root); break;
+        case 3: postorder(root); break;
+        case 4: levelOrder(root); return;
+        default: printf("Invalid traversal choice."); return;
+    }
+    printf("\n");
+}
+
+/* Main */
+int main() {
+    int choice, key;
+    while (1) {
+        displayMenu();
+        if (scanf("%d", &choice) != 1) { printf("Invalid input. Exiting.\n"); return 0; }
+
+        switch (choice) {
+            case 1:
+                printf("Enter key to insert: ");
+                if (scanf("%d", &key) != 1) { printf("Invalid input.\n"); break; }
+                root = insert(root, key);
+                break;
+            case 2:
+                if (!root) { printf("Tree is empty. Nothing to delete.\n"); break; }
+                printf("Enter key to delete: ");
+                if (scanf("%d", &key) != 1) { printf("Invalid input.\n"); break; }
+                if (search(root, key))
+                    root = deleteKey(root, key);
+                else
+                    printf("Key %d not found.\n", key);
+                break;
+            case 3:
+                printf("Enter key to search: ");
+                if (scanf("%d", &key) != 1) { printf("Invalid input.\n"); break; }
+                if (search(root, key)) printf("Key %d found.\n", key);
+                else printf("Key %d not found.\n", key);
+                break;
+            case 4:
+                displayTraversalMenu();
+                break;
+            case 5:
+                printf("Tree height: %d\n", height(root));
+                break;
+            case 6:
+                return 0;
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    }
+    return 0;
+}
+
+Output:
+
+--- Binary Search Tree Menu ---
+1. Insert
+2. Delete
+3. Search
+4. Display (Traversals)
+5. Height
+6. Exit
+Enter your choice: 1
+Enter key to insert: 20
+
+--- Binary Search Tree Menu ---
+1. Insert
+2. Delete
+3. Search
+4. Display (Traversals)
+5. Height
+6. Exit
+Enter your choice: 1
+Enter key to insert: 25
+
+--- Binary Search Tree Menu ---
+1. Insert
+2. Delete
+3. Search
+4. Display (Traversals)
+5. Height
+6. Exit
+Enter your choice: 1
+Enter key to insert: 30
+
+--- Binary Search Tree Menu ---
+1. Insert
+2. Delete
+3. Search
+4. Display (Traversals)
+5. Height
+6. Exit
+Enter your choice: 1
+Enter key to insert: 35
+
+--- Binary Search Tree Menu ---
+1. Insert
+2. Delete
+3. Search
+4. Display (Traversals)
+5. Height
+6. Exit
+Enter your choice: 1
+Enter key to insert: 40
+
+--- Binary Search Tree Menu ---
+1. Insert
+2. Delete
+3. Search
+4. Display (Traversals)
+5. Height
+6. Exit
+Enter your choice: 2
+Enter key to delete: 40
+Deleted 40
+
+--- Binary Search Tree Menu ---
+1. Insert
+2. Delete
+3. Search
+4. Display (Traversals)
+5. Height
+6. Exit
+Enter your choice: 4
+
+-- Display Options --
+1. Inorder   (L, Root, R → Sorted)
+2. Preorder  (Root, L, R)
+3. Postorder (L, R, Root)
+4. Level-order (BFS)
+Enter your choice: 1
+Traversal: 20 25 30 35 
+
+--- Binary Search Tree Menu ---
+1. Insert
+2. Delete
+3. Search
+4. Display (Traversals)
+5. Height
+6. Exit
+Enter your choice: 4
+
+-- Display Options --
+1. Inorder   (L, Root, R → Sorted)
+2. Preorder  (Root, L, R)
+3. Postorder (L, R, Root)
+4. Level-order (BFS)
+Enter your choice: 2
+Traversal: 20 25 30 35 
+
+--- Binary Search Tree Menu ---
+1. Insert
+2. Delete
+3. Search
+4. Display (Traversals)
+5. Height
+6. Exit
+Enter your choice: 4
+
+-- Display Options --
+1. Inorder   (L, Root, R → Sorted)
+2. Preorder  (Root, L, R)
+3. Postorder (L, R, Root)
+4. Level-order (BFS)
+Enter your choice: 3
+Traversal: 35 30 25 20 
+
+--- Binary Search Tree Menu ---
+1. Insert
+2. Delete
+3. Search
+4. Display (Traversals)
+5. Height
+6. Exit
+Enter your choice: 3
+Enter key to search: 30
+Key 30 found.
+
+--- Binary Search Tree Menu ---
+1. Insert
+2. Delete
+3. Search
+4. Display (Traversals)
+5. Height
+6. Exit
+Enter your choice: 5
+Tree height: 4
+
+--- Binary Search Tree Menu ---
+1. Insert
+2. Delete
+3. Search
+4. Display (Traversals)
+5. Height
+6. Exit
+Enter your choice: 6
+
+
+=== Code Execution Successful ===
